@@ -1,0 +1,21 @@
+---
+- name: Install apache
+  become: yes
+  yum:
+    name: httpd
+    state: present
+- name: Copy httpd.conf
+  become: yes
+  copy:
+    src: httpd.conf
+    dest: /etc/httpd/conf/httpd.conf
+    owner: root
+    group: root
+  notify:
+    - restart apache
+- name: Enable httpd service
+  become: yes
+  service:
+    name: httpd
+    enabled: yes
+    state: started
