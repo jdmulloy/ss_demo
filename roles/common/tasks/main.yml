@@ -1,0 +1,7 @@
+---
+# Needed for ansible
+- name: Install libselinux-puthon
+  become: yes
+  yum:
+    name: libselinux-python
+    state: present
