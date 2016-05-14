@@ -1,0 +1,17 @@
+---
+- name: Install perl and perl-cgi
+  become: yes
+  yum: name={{ item }} state=present
+  with_items:
+    - perl
+    - perl-CGI
+- name: Copy CGI Script
+  become: yes
+  copy:
+    src: "{{ item }}"
+    dest: "/var/www/cgi-bin/{{ item }}"
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    index.cgi
