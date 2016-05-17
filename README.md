@@ -1,7 +1,15 @@
 # ss_demo
 Automated AWS VM to give user IP
 
-# Package dependencies
+# Dependencies
+1. epel
+2. ansible
+3. python boto
+
+# SSH Source IP
+You will need to change the SSH source IP in the ingresshome object to be the
+external IP of the machine running ansible. This is to prevent anyone else from
+accessing the SSH port.
 
 # AWS Credentials
 You will need to put your AWS credentials in the file aws_key. You can copy the
