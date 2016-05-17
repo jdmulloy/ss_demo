@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Delete Cloud Formation
+      cloudformation:
+        stack_name: "ip-app"
+        state: "absent"
+        region: "us-west-2"
