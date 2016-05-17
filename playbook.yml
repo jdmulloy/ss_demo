@@ -1,5 +1,5 @@
 ---
-- hosts: app
+- hosts: tag_role_web_ip
   roles:
     - common
     - ip_app
