@@ -1210,6 +1210,9 @@ class Ec2Inventory(object):
                 #print type(value)
                 #print value
 
+        # Ugly hack to deal with RHEL/CentOS 7 moving python to /bin/python
+        instance_vars['ansible_python_interpreter'] = '/bin/python'
+
         return instance_vars
 
     def get_host_info_dict_from_describe_dict(self, describe_dict):
