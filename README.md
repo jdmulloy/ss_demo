@@ -4,7 +4,7 @@ Automated AWS VM to give user IP
 # Dependencies
 1. epel
 2. ansible
-3. python boto
+3. python2-boto
 
 # SSH Source IP
 You will need to change the SSH source IP in the ingresshome object to be the
