@@ -16,8 +16,7 @@ You will need to put your AWS credentials in the file aws_key. You can copy the
 aws_key.example file
 
 # Keypair
-You will need to specify the keypair name of the machine running ansible in the
-cloud formation template file at files/cf.json
+The default keypair name is centos. If your keypair name is different you must change it in the cloud formation template located at files/cf.json.
 
 # Running Ansible
 

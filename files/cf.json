@@ -57,7 +57,7 @@
         "InstanceInitiatedShutdownBehavior": "stop",
         "ImageId": "ami-d2c924b2",
         "InstanceType": "t2.micro",
-        "KeyName": "jdmulloy@server1.jdmulloy.net",
+        "KeyName": "centos",
         "Monitoring": "false",
         "Tags": [
           {
