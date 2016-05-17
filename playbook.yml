@@ -1,4 +1,16 @@
 ---
+- hosts: localhost
+  tasks:
+    - name: Launch Cloud Formation
+      cloudformation:
+        stack_name: "ip-app"
+        state: "present"
+        region: "us-west-2"
+        disable_rollback: true
+        template: "files/cf.json"
+        tags:
+          Stack: "ansible-cloudformation"
+
 - hosts: tag_role_web_ip
   roles:
     - common
