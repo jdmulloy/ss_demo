@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
   "Resources": {
-    "vpcdcd295b9": {
+    "vpcweb": {
       "Type": "AWS::EC2::VPC",
       "Properties": {
         "CidrBlock": "172.31.0.0/16",
@@ -10,33 +10,13 @@
         "EnableDnsHostnames": "true"
       }
     },
-    "subnet324c1857": {
+    "subnetvpcweb2b": {
       "Type": "AWS::EC2::Subnet",
       "Properties": {
         "CidrBlock": "172.31.16.0/20",
         "AvailabilityZone": "us-west-2b",
         "VpcId": {
-          "Ref": "vpc-web"
-        }
-      }
-    },
-    "subnet8c147efb": {
-      "Type": "AWS::EC2::Subnet",
-      "Properties": {
-        "CidrBlock": "172.31.32.0/20",
-        "AvailabilityZone": "us-west-2a",
-        "VpcId": {
-          "Ref": "vpcdcd295b9"
-        }
-      }
-    },
-    "subnet9753dfce": {
-      "Type": "AWS::EC2::Subnet",
-      "Properties": {
-        "CidrBlock": "172.31.0.0/20",
-        "AvailabilityZone": "us-west-2c",
-        "VpcId": {
-          "Ref": "vpcdcd295b9"
+          "Ref": "vpcweb"
         }
       }
     },
@@ -54,19 +34,19 @@
         ]
       }
     },
-    "acl01cdb764": {
+    "aclsweb": {
       "Type": "AWS::EC2::NetworkAcl",
       "Properties": {
         "VpcId": {
-          "Ref": "vpcdcd295b9"
+          "Ref": "vpcweb"
         }
       }
     },
-    "rtb92662af7": {
+    "rtweb": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
         "VpcId": {
-          "Ref": "vpcdcd295b9"
+          "Ref": "vpcweb"
         }
       }
     },
@@ -77,7 +57,7 @@
         "InstanceInitiatedShutdownBehavior": "stop",
         "ImageId": "ami-d2c924b2",
         "InstanceType": "t2.micro",
-        "KeyName": "jdmulloy@aluminium.jdmulloy.net",
+        "KeyName": "jdmulloy@server1.jdmulloy.net",
         "Monitoring": "false",
         "Tags": [
           {
@@ -90,7 +70,7 @@
             "DeleteOnTermination": "true",
             "DeviceIndex": 0,
             "SubnetId": {
-              "Ref": "subnet324c1857"
+              "Ref": "subnetvpcweb2b"
             },
             "PrivateIpAddresses": [
               {
@@ -100,7 +80,7 @@
             ],
             "GroupSet": [
               {
-                "Ref": "sgwebsg"
+                "Ref": "sgweb"
               }
             ],
             "AssociatePublicIpAddress": "true"
@@ -108,12 +88,12 @@
         ]
       }
     },
-    "sgwebsg": {
+    "sgweb": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "Security group for server serving HTTP/HTTPS to the internet",
         "VpcId": {
-          "Ref": "vpcdcd295b9"
+          "Ref": "vpcweb"
         }
       }
     },
@@ -126,7 +106,7 @@
         "RuleAction": "allow",
         "RuleNumber": "100",
         "NetworkAclId": {
-          "Ref": "acl01cdb764"
+          "Ref": "aclsweb"
         }
       }
     },
@@ -138,7 +118,7 @@
         "RuleAction": "allow",
         "RuleNumber": "100",
         "NetworkAclId": {
-          "Ref": "acl01cdb764"
+          "Ref": "aclsweb"
         }
       }
     },
@@ -146,32 +126,10 @@
       "Type": "AWS::EC2::SubnetNetworkAclAssociation",
       "Properties": {
         "NetworkAclId": {
-          "Ref": "acl01cdb764"
+          "Ref": "aclsweb"
         },
         "SubnetId": {
-          "Ref": "subnet324c1857"
-        }
-      }
-    },
-    "subnetacl2": {
-      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
-      "Properties": {
-        "NetworkAclId": {
-          "Ref": "acl01cdb764"
-        },
-        "SubnetId": {
-          "Ref": "subnet9753dfce"
-        }
-      }
-    },
-    "subnetacl3": {
-      "Type": "AWS::EC2::SubnetNetworkAclAssociation",
-      "Properties": {
-        "NetworkAclId": {
-          "Ref": "acl01cdb764"
-        },
-        "SubnetId": {
-          "Ref": "subnet8c147efb"
+          "Ref": "subnetvpcweb2b"
         }
       }
     },
@@ -179,7 +137,7 @@
       "Type": "AWS::EC2::VPCGatewayAttachment",
       "Properties": {
         "VpcId": {
-          "Ref": "vpcdcd295b9"
+          "Ref": "vpcweb"
         },
         "InternetGatewayId": {
           "Ref": "igw863eb2e3"
@@ -191,7 +149,7 @@
       "Properties": {
         "DestinationCidrBlock": "0.0.0.0/0",
         "RouteTableId": {
-          "Ref": "rtb92662af7"
+          "Ref": "rtweb"
         },
         "GatewayId": {
           "Ref": "igw863eb2e3"
@@ -199,22 +157,33 @@
       },
       "DependsOn": "gw1"
     },
+    "rtassoc1": {
+      "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties" : {
+        "RouteTableId": {
+          "Ref": "rtweb"
+        },
+        "SubnetId": {
+          "Ref": "subnetvpcweb2b"
+        }
+      }
+    },
     "dchpassoc1": {
       "Type": "AWS::EC2::VPCDHCPOptionsAssociation",
       "Properties": {
         "VpcId": {
-          "Ref": "vpcdcd295b9"
+          "Ref": "vpcweb"
         },
         "DhcpOptionsId": {
           "Ref": "doptd708f7b2"
         }
       }
     },
-    "ingress1": {
+    "ingresshttp": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgwebsg"
+          "Ref": "sgweb"
         },
         "IpProtocol": "tcp",
         "FromPort": "80",
@@ -222,47 +191,11 @@
         "CidrIp": "0.0.0.0/0"
       }
     },
-    "ingress2": {
+    "ingresshttps": {
       "Type": "AWS::EC2::SecurityGroupIngress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgwebsg"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "CidrIp": "146.115.180.232/32"
-      }
-    },
-    "ingress3": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgwebsg"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "CidrIp": "107.170.207.100/32"
-      }
-    },
-    "ingress4": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgwebsg"
-        },
-        "IpProtocol": "tcp",
-        "FromPort": "22",
-        "ToPort": "22",
-        "CidrIp": "45.63.5.150/32"
-      }
-    },
-    "ingress5": {
-      "Type": "AWS::EC2::SecurityGroupIngress",
-      "Properties": {
-        "GroupId": {
-          "Ref": "sgwebsg"
+          "Ref": "sgweb"
         },
         "IpProtocol": "tcp",
         "FromPort": "443",
@@ -270,11 +203,23 @@
         "CidrIp": "0.0.0.0/0"
       }
     },
+    "ingresssshhome": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgweb"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "CidrIp": "146.115.180.232/32"
+      }
+    },
     "egress1": {
       "Type": "AWS::EC2::SecurityGroupEgress",
       "Properties": {
         "GroupId": {
-          "Ref": "sgwebsg"
+          "Ref": "sgweb"
         },
         "IpProtocol": "-1",
         "CidrIp": "0.0.0.0/0"
